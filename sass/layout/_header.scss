@@ -1,0 +1,23 @@
+header {
+    display: flex;
+    justify-content: space-between;
+
+    & .header__logo {
+        
+        
+        & img {
+           
+            border: 1px solid blue;
+        }
+    }
+ 
+}
+
+nav {
+    background-color: $color-site;
+    width: 100%;
+    align-items: baseline;
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 100%;
+}
