@@ -1,4 +1,17 @@
 const cameras = [
+  // {
+  //   "lenses": [
+  //     "35mm 1.4",
+  //     "50mm 1.6",
+  //     "70mm 1.6",
+  //     "90mm 1.6"
+  //   ],
+  //   "_id": "1",
+  //   "name": "Nouvelle camera",
+  //   "price": 30000,
+  //   "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  //   "imageUrl": "vcam_6.png"
+  // },
   {
     "lenses": [
       "35mm 1.4",
@@ -6,9 +19,9 @@ const cameras = [
     ],
     "_id": "5be1ed3f1c9d44000030b061",
     "name": "Zurss 50S",
-    "price": 49900,
+    "price": 49999,
     "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "imageUrl": "vcam_1.jpg"
+    "imageUrl": "vcam_1.webp"
   },
   {
     "lenses": [
