@@ -15,13 +15,18 @@ header .header__logo img {
   justify-content: space-between;
 }
 
-#navbarSupportedContent {
-  max-width: max-content;
+@media screen and (min-width: 576px) {
+  #navbarSupportedContent {
+    max-width: max-content;
+  }
 }
 
 footer {
-  height: 100px;
-  background-color: #bd86b2;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 4rem;
+  background-color: #e1c8dc;
 }
 
 * {
@@ -30,6 +35,20 @@ footer {
 
 body {
   height: 100%;
+}
+
+#product-image {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.main-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+main {
+  padding-bottom: 4rem;
 }
 
 /*# sourceMappingURL=style.css.map */

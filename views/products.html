@@ -15,6 +15,7 @@
     <title>OriCamera - Détails de Caméra</title>
   </head>
   <body>
+      <div class="container-fluid ps-0 pe-0">
         <header>
             <nav class="navbar  navbar-expand-sm navbar-light nav">
                     <a class="navbar-brand" href="../index.html">
@@ -26,7 +27,7 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="./views/basket.html">
+                                <a class="nav-link active" aria-current="page" href="./basket.html">
                                     <i class="fas fa-shopping-cart"></i>
                                     Panier
                                 </a>
@@ -35,53 +36,44 @@
             </nav>
         </header>
 		
-		<main class="container mt-3 mb-5">
+		<main class="container-fluid mt-3 mb-auto">
 			<div class="row" id="product_container">
 
                 <div class="col-12 col-sm-4">
-                    <img src="../images/vcam_1.webp" alt="image camera">
+                    <img src="" alt="image camera" id="product-image">
                 </div>
                 <div class="col-12 col-sm-4">
-                    <h5 class="card-title" id="card-title">titre</h5>
-                    <p class="card-text" id="card-text">texte</p>
-                    <p class="card-text" id="card-price">prix</p>
+                    <h5 id="product-title">titre</h5>
+                    <p id="product-text">texte</p>
+                    <p id="product-price">prix</p>
                 </div>
                 <div class="col-12 col-sm-4">
                     <form>
+                        <label for="selectOption">Choix de la lentille</label><br>
                         <select id="selectOption">
-                            <option default>Sélectionner une lentille</option>
+                            <option default>Sélection...</option>
                         </select>
+
+
+                        
+                        
 
                     </form>
                 </div>
 
-                <!-- <div class="col-12" style="justify-content: center;display: flex;">
-                    <div class="card" style="width: 18rem;">
-                        <img src="" class="card-img-top" alt="" id="card-image">
-                        <div class="card-body">
-                            <h5 class="card-title" id="card-title"></h5>
-                            <p class="card-text" id="card-text"></p>
-                            <p class="card-text" id="card-price"></p>
-                            <form>
-                                <select id="selectOption">
-                                    <option default>Sélectionner une lentille</option>
-                                </select>
-
-                            </form>
-                            
-                            <a href="#" class="btn btn-primary">Ajout à mon panier</a>
-                        </div>
-                    </div>
-                </div> -->
-
-				
-			</div>
+            </div>
+            <div class="button">
+                
+            </div>
         </main>
  
 
 		<footer>
 
 		</footer>
+
+      </div>
+        
 
 
     <!-- Bootstrap Bundle with Popper -->

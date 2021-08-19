@@ -23,5 +23,9 @@ header {
 }
 
 #navbarSupportedContent {
-    max-width: max-content;
+    @include size-sm-bootstrap {
+        max-width: max-content;
+    };
+    
+
 }

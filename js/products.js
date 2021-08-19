@@ -1,9 +1,9 @@
 // Initialiser les containers
 
-let cardImage = document.getElementById('card-image');
-let cardTitle = document.getElementById('card-title');
-let cardText = document.getElementById('card-text');
-let cardPrice = document.getElementById('card-price');
+let productImage = document.getElementById('product-image');
+let productTitle = document.getElementById('product-title');
+let productText = document.getElementById('product-text');
+let productPrice = document.getElementById('product-price');
 let selectOption = document.getElementById('selectOption');
 
 
@@ -15,12 +15,14 @@ fetch('http://localhost:3000/api/cameras/'+ id)
 .then(response => response.json())
 .then(camera => {
     console.log(camera);
-    cardImage.setAttribute('src',camera.imageUrl);
-    cardImage.setAttribute('alt',"Image de la caméra " + camera.name);
+    productImage.setAttribute('src',camera.imageUrl);
+    productImage.setAttribute('alt',"Image de la caméra " + camera.name);
 
-    cardTitle.textContent = camera.name;
-    cardText.textContent = camera.description;
-    cardPrice.textContent = (camera.price/100).toFixed(2) + " €";
+    productTitle.textContent = camera.name;
+
+    productText.textContent = camera.description;
+    
+    productPrice.textContent = (camera.price/100).toFixed(2) + " €";
 
     for (i=0; i<camera.lenses.length; i++) {
         let option = document.createElement("option");

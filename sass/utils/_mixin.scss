@@ -1,0 +1,5 @@
+@mixin size-sm-bootstrap {
+    @media screen and (min-width: map-get($breakpoint, sm)) {
+        @content;
+    }
+}

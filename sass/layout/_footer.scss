@@ -1,4 +1,8 @@
 footer {
-    height: 100px;
-    background-color: darken($color: $color-site, $amount: 30%);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 4rem;
+    background-color: darken($color: $color-site, $amount: 10%);
+    
 }
