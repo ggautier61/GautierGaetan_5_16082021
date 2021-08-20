@@ -52,8 +52,6 @@ fetch('http://localhost:3000/api/cameras')
         let btnDetails = document.createElement("a")
         btnDetails.classList.add("btn");
         btnDetails.setAttribute('style', "justify-content: center;display: flex;border: 1px solid gray;")
-        
-        // btnDetails.classList.add("btn__centre");
         btnDetails.href = "views/products.html?id="+arts[i]._id;
         btnDetails.innerHTML = " Détails de la caméra";
         divCardBoby.appendChild(btnDetails);

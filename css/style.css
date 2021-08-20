@@ -21,24 +21,34 @@ header .header__logo img {
   }
 }
 
-footer {
-  position: absolute;
-  bottom: 0;
+.footer {
   width: 100%;
   height: 4rem;
   background-color: #e1c8dc;
 }
+.footer_bottom {
+  position: absolute;
+  bottom: 0;
+}
 
+@font-face {
+  font-family: "Oxygen";
+  src: url("https://fonts.googleapis.com/css2?family=Oxygen:wght@300&display=swap");
+  font-weight: normal;
+  font-style: normal;
+}
 * {
   box-sizing: border-box;
 }
 
 body {
   height: 100%;
+  font-family: "Oxygen", "Arial", sans-serif;
 }
 
 #product-image {
   width: 100%;
+  max-width: 400px;
   border-radius: 10px;
 }
 
@@ -49,6 +59,11 @@ body {
 
 main {
   padding-bottom: 4rem;
+}
+
+#product-image-col {
+  display: flex;
+  justify-content: center;
 }
 
 /*# sourceMappingURL=style.css.map */
