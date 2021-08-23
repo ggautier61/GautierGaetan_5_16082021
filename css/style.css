@@ -31,6 +31,15 @@ header .header__logo img {
   bottom: 0;
 }
 
+.btn-adjust {
+  height: 26px;
+  border: 1px solid gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 13px;
+}
+
 @font-face {
   font-family: "Oxygen";
   src: url("https://fonts.googleapis.com/css2?family=Oxygen:wght@300&display=swap");

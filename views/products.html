@@ -42,10 +42,10 @@
 		<main class="container-fluid mt-3 mb-auto">
 			<div class="row" id="product_container">
 
-                <div class="col-12 col-md-6" id="product-image-col">
+                <div class="col-12 col-md-6 mt-3" id="product-image-col">
                     <img src="" alt="image camera" id="product-image">
                 </div>
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-6 mt-3">
                     <h5 id="product-title">titre</h5>
                     <p id="product-text">texte</p>
                     <p id="product-price">prix</p>
@@ -56,14 +56,20 @@
                                     <option selected value="0">Sélection lentilles</option>
                                 </select>
                             </div>
-                            <div>
+                            <div class="form-group">
                                 <label for="quantity" class="mt-3">Quantité</label><br>
-                            <input type="number" value="1" min="0" max="5" step="1" id="quantity"/>
+                                <input type="number" value="1" min="0" max="5" step="1" id="quantity"/>
                             </div>
 
-                            <button class="btn btn-success mt-3" id="btn-valid">Ajouter au panier</button>
-
-                            <div class="text" id="message-basket">Cet Article est présent dans votre panier</div>
+                            <div class="row row-md-col">
+                                <div class="col-12">
+                                    <button class="btn btn-success mt-3 ms-5" id="btn-valid">Ajouter au panier</button>
+                                </div>
+                                <div class="col-12">
+                                    <div class="text mt-3 mb-3" id="message-basket">Cet Article est présent dans votre panier</div>
+                                </div>
+                            </div>
+                            
     
     
                             
@@ -81,7 +87,7 @@
         </main>
  
 
-		<footer class="footer footer_bottom">
+		<footer class="footer">
 
 		</footer>
 
