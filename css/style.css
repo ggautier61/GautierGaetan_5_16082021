@@ -40,6 +40,14 @@ header .header__logo img {
   border-radius: 13px;
 }
 
+.row-button {
+  height: 25px;
+  flex-wrap: nowrap;
+  width: 150px;
+  position: relative;
+  padding-left: 13px;
+}
+
 @font-face {
   font-family: "Oxygen";
   src: url("https://fonts.googleapis.com/css2?family=Oxygen:wght@300&display=swap");

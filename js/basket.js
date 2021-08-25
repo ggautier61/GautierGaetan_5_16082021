@@ -1,157 +1,128 @@
-let main = document.querySelector('main');
-let modele = document.getElementById('modele');
-let btnDelete = document.getElementById('btn-delete');
-let btnDeteleArray = [];
-let montantTotal = 0;
+let basketContainer = document.getElementById('basketList');
 
-let creation = new Promise((resolve, reject) => {
+let basket = [
+    { 
+        id: "5be1ed3f1c9d44000030b061",
+        quantity: 2,
+        option: 1
+    }
+]
 
-    createCard();
-    resolve(true);
-
-    }).then((value) => {
-
-        console.log(value);
-
-    //Calcul montant total
-    let rowTotal = document.createElement('div');
-    rowTotal.setAttribute('class', 'row p-3 m-3');
-    let p = document.createElement('p');    
-    p.textContent = 'Total : ' +(calculMontant()/100).toFixed(2) + " €";
-    rowTotal.appendChild(p);
-    // p.textContent = (montantTotal/100).toFixed(2) + " €";
-    main.append(rowTotal);
-
-    //Ajout bouton passer la commande
-    let row = document.createElement('div');
-    row.setAttribute('class', 'row p-3 m-3');
-    let btnvalid = document.createElement('div');
-    btnvalid.setAttribute('id', 'btnvalid');
-    btnvalid.setAttribute('class', 'btn btn-success');
-    btnvalid.textContent = 'Passer commande';
-    row.appendChild(btnvalid);
-    main.insertAdjacentElement('afterend', row);
-
+basket.push({
+    id: '5be1ef211c9d44000030b062',
+    quantity: 3,
+    option: 1
 })
 
-
-addEventListernerBtn();
-deleteCardModele();
-
-
-function createCard() {
-
-    for(let i=0; i<localStorage.length; i++) {
-
-        const id = localStorage.key(i).split('_')[0];
     
-        fetch('http://localhost:3000/api/cameras/'+ id)
+localStorage.setItem('basket', JSON.stringify(basket));
+
+let storage = JSON.parse(localStorage.getItem('basket'));
+
+
+//Création des élément html du panier
+storage.forEach(cam => {
+    console.log(cam);
+
+    fetch('http://localhost:3000/api/cameras/'+ cam.id)
         .then(response => response.json())
         .then(camera => {
     
-            let divLigneCam = modele.cloneNode(true);
-            divLigneCam.setAttribute('id', localStorage.key(i));
-    
-            //Image
-            let image = divLigneCam.getElementsByClassName('img-fluid');
-            image[0].setAttribute('src', camera.imageUrl);
-    
-            //Titre
-            divLigneCam.getElementsByClassName('col-8')[0].querySelector('h5').textContent = camera.name;
-    
-            //Recupération de ligne option dans la page
-            let option = divLigneCam.getElementsByClassName('col-8')[0].getElementsByClassName('card-text')[0];
-    
-            //Recupération de la collection en cours dans localStorage
-            let storageCam = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    
-            //Option
-            option.textContent = camera.lenses[Number(storageCam.option) - 1];
-    
-            //Price
-            divLigneCam.getElementsByClassName('col-8')[0].getElementsByClassName('card-text')[1].textContent = "Prix: " + (camera.price/100).toFixed(2) + " €";
-    
-            //Quantité
-            let input = divLigneCam.getElementsByClassName('col-8')[1].querySelector('input');
-            input.value = storageCam.quantity;
-            // montantTotal += Number(camera.price) * storageCam.quantity;
-            // console.log(montantTotal);
+            createCardBasket(camera, cam)
+            .then();
 
-            //Bouton Delete
-            
-            const name = 'btn-delete-' + storageCam.id;
-            btnDelete.setAttribute('id', name);
-            btnDeteleArray.push(name);
-            
-            main.appendChild(divLigneCam);                
     
         }).catch(error => console.log(error))
-    }  
-    
-    return true;
-  
-}
 
 
+})
 
+function createCardBasket(camera, cam) {
 
-function addEventListernerBtn() {
-    console.log('Array.length', btnDeteleArray.length);
-    console.log(btnDeteleArray);
+    let card = document.createElement('div');
+            card.setAttribute('class', 'row p-3 m-3');
+            card.setAttribute('style', 'border: 1px solid gray;');
+            basketContainer.appendChild(card);
 
-    for(let i=0; i<btnDeteleArray.length; i++) {
-        console.log('on passe ici');
-    }
-
-
-
-
-    // btnDeteleArray.forEach(id => {
+            let colImage = document.createElement('div');
+            colImage.setAttribute('class', 'col-4');
+            colImage.setAttribute('style', 'display: flex;justify-content: center;')
+            card.appendChild(colImage);
         
-    //     document.getElementById(id).addEventListener('click', function(event) {
-    //         console.log(event);
-    //     })
-    // });
-    // console.log(id);
-    // let btnfind = document.getElementById(id);
-    // btnfind.addEventListener('click', function(event) {
-    //     console.log(event);
-    // })
+            let image = document.createElement('img');
+            image.setAttribute('class', 'img-fluid rounded');
+            image.setAttribute('src', camera.imageUrl);
+            image.setAttribute('alt', 'Image de la caméra');
+            image.setAttribute('style', 'height: 85px;');
+            colImage.appendChild(image);
 
-    
+            let colDetails = document.createElement('div');
+            colDetails.setAttribute('class', 'col-8');
+            card.appendChild(colDetails);
+
+            let titre = document.createElement('h5');
+            titre.textContent = camera.name;
+            colDetails.appendChild(titre);
+
+            let option = document.createElement('p');
+            //Rercherche nom de l'option
+            console.log(camera.lenses);
+            option.textContent = cam.option;
+            colDetails.appendChild(option);
+
+            let price = document.createElement('p');
+            price.textContent = "Prix: " + (camera.price/100).toFixed(2) + " €";
+            colDetails.appendChild(price);
+
+            //Création de la ligne des boutons et quantité
+
+            let rowButton = document.createElement('div');
+            rowButton.setAttribute('class', 'row row-button');
+            colDetails.appendChild(rowButton);
+
+            let btnMinus = document.createElement('div');
+            btnMinus.setAttribute('class', 'col-2 btn-adjust ms-2 me-2');
+            btnMinus.setAttribute('type', 'button');
+            rowButton.appendChild(btnMinus);
+
+            let iconMinus = document.createElement('i');
+            iconMinus.setAttribute('class', 'fas fa-minus');
+            btnMinus.appendChild(iconMinus);
+
+            let colQuantite = document.createElement('div');
+            colQuantite.setAttribute('class', 'col-8');
+            rowButton.appendChild(colQuantite);
+
+            let quantity = document.createElement('input');
+            quantity.setAttribute('style', 'text');
+            quantity.setAttribute('style', 'width: 100%;height: 100%; text-align: center;');
+            quantity.value = cam.quantity;
+            colQuantite.appendChild(quantity);
+
+
+            let btnPlus = document.createElement('div');
+            btnPlus.setAttribute('class', 'col-2 btn-adjust ms-2 me-2');
+            btnPlus.setAttribute('type', 'button');
+            rowButton.appendChild(btnPlus);
+
+            let iconPlus = document.createElement('i');
+            iconPlus.setAttribute('class', 'fas fa-plus');
+            btnPlus.appendChild(iconPlus);
+
+            let btnDelete = document.createElement('div');
+            btnDelete.setAttribute('class', 'btn btn-alert col-2 btn-adjust ms-2 me-2');
+            btnDelete.setAttribute('type', 'button');
+            rowButton.appendChild(btnDelete);
+
+            let iconDelete = document.createElement('i');
+            iconDelete.setAttribute('class', 'fas fa-trash-alt');
+            btnDelete.appendChild(iconDelete);
 }
 
-function deleteCardModele() {
-   main.removeChild(modele); 
-}
 
-function deleteCard() {
-
-    //Il faut récupérer l'id du div parent par rapport au btn click
+//Ajout de l'event click sur les boutons
+let buttons = document.querySelectorAll(".btn-adjust");
+console.log(buttons);
 
 
-
-}
-
-
-function calculMontant() {
-
-    let montant = 0;
-
-    for(let i=0; i<localStorage.length; i++) {
-
-         //Recupération de la collection en cours dans localStorage
-         let storageCam = JSON.parse(localStorage.getItem(localStorage.key(i)));
-         console.log(storageCam);
-         
-        montant += Number(storageCam.prix) * Number(storageCam.quantity);
-
-        console.log(montant);
-        // console.log(localStorage.quantity);
-    }
-
-    // console.log(montant);
-    return montant;
-}
-
-
+console.log(storage);

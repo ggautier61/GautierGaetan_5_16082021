@@ -11,8 +11,9 @@ let selectOption = document.getElementById('selectOption');
 let cam;
 let cam_id;
 let storageCam;
+let basketStorage = JSON.parse(localStorage.getItem('basket'));
 
-
+console.log(basketStorage);
 
 //Récuperer id
 let params = new URLSearchParams (document.location.href.split('?')[1]);
@@ -63,16 +64,23 @@ btnAddBasket.addEventListener('click', function(event) {
     //vérification si lentilles option sélectionné
     if (selectOption.selectedIndex == 0) {
         alert('Veuillez sélectionner un type de lentille.');
-    } else {       
+    } else { 
+        console.log(localStorage);
+        const addProduct =
+            { 
+                id: id + "_" + selectOption.selectedIndex,
+                quantity: quantity.value
+            };  
+        
 
-        if(storageCam) {
-            cam.quantity = (Number(storageCam.quantity) + Number(quantity.value)).toString();            
-        } else {
-            cam.quantity = quantity.value;
-        }
+        // if(storageCam) {
+        //     cam.quantity = (Number(storageCam.quantity) + Number(quantity.value)).toString();            
+        // } else {
+        //     cam.quantity = quantity.value;
+        // }
 
-        localStorage.setItem(cam.id, JSON.stringify(cam));
-        searchStorage();        
+        localStorage.setItem('basket', JSON.stringify(basket));
+        // searchStorage();        
         console.log(localStorage);
 
     }
@@ -91,7 +99,8 @@ selectOption.onchange =
 
 
 function searchStorage() {
-    storageCam = JSON.parse(localStorage.getItem(cam.id));
+    storageCam = JSON.parse(localStorage);
+    
         if (!storageCam) {
 
             messageBasket.setAttribute('style', "visibility: hidden");

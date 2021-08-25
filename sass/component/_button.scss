@@ -6,3 +6,11 @@
     align-items: center;
     border-radius: 13px;
 }
+
+.row-button {
+    height: 25px;
+    flex-wrap: nowrap;
+    width: 150px;
+    position: relative;
+    padding-left: 13px;
+}
