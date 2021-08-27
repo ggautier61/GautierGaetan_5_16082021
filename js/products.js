@@ -7,42 +7,65 @@ let quantityInput = document.getElementById('quantity');
 let btnAddBasket = document.getElementById('btn-valid');
 let messageBasket = document.getElementById('message-basket');
 let selectOption = document.getElementById('selectOption');
+
 let cam;
 let cam_id;
 let storageCam;
-
-
+let basket;
+let articlesStorage = [];
 
 //Récuperer id
 let params = new URLSearchParams (document.location.href.split('?')[1]);
 let id = params.get("id");
 
 //récupération de tous les articles de la référence sélectionnée
-let basket = JSON.parse(localStorage.getItem('basket'));
-let articlesStorage = [];
-
-basket.forEach(art => {
-    if (art.id == id) {
-        articlesStorage.push(art);
-    }
-})
-
-function LoadBasket() {
+function loadBasket() {
     basket = JSON.parse(localStorage.getItem('basket'));
+    showMessage(); 
+ }
+ 
+ function setBasket() {
+     localStorage.setItem('basket', JSON.stringify(basket));
+     loadBasket();
+ }
+
+ function showMessage() {
+    messageBasket.setAttribute('style', "visibility: hidden;");
+    basket.forEach(art => {
+        if(art.id == id && art.option == selectOption.selectedIndex) {
+            messageBasket.setAttribute('style', "visibility: visible");
+            messageBasket.textContent = 'Vous avez ' + art.quantity + ' article(s) de ce modèle dans votre panier.'
+        } 
+    })
+ }
+
+ function AddValuePage(camera) {
+
+    productImage.setAttribute('src',camera.imageUrl);
+    productImage.setAttribute('alt',"Image de la caméra " + camera.name);
+    productTitle.textContent = camera.name;
+    productText.textContent = camera.description;
+    productPrice.textContent = "Prix: " + (camera.price/100).toFixed(2) + " €";
+
+    for (i=0; i<camera.lenses.length; i++) {
+        let option = document.createElement("option");
+        option.setAttribute('value', i+1);
+        option.textContent = camera.lenses[i];
+        selectOption.appendChild(option);
+    }
 }
 
+
+
+loadBasket();
 
 //Appel Api getitem by id
 fetch('http://localhost:3000/api/cameras/'+ id)
 .then(response => response.json())
 .then(camera => {
-
     //Add values to the page
     AddValuePage(camera);  
-  
 }).catch(error => console.log(error))
-
-
 
 btnAddBasket.addEventListener('click', function(event) {
     event.preventDefault();
@@ -51,8 +74,7 @@ btnAddBasket.addEventListener('click', function(event) {
     if (selectOption.selectedIndex == 0) {
         alert('Veuillez sélectionner un type de lentille.');
     } else {
-        let art = articlesStorage.find(art => art.option == selectOption.selectedIndex);
-        console.log(art);
+        let art = basket.find(art => art.id == id && art.option == selectOption.selectedIndex);
 
         if (!art) {
             //si l'article/option n'est pas dans le panier --> Ajout nouvel article
@@ -68,24 +90,23 @@ btnAddBasket.addEventListener('click', function(event) {
             art.quantity = Number(art.quantity) + Number(quantityInput.value);
         }
 
-        localStorage.setItem('basket', JSON.stringify(basket));
-        // searchStorage();        
-        console.log(localStorage);
+        setBasket();
+
+
 
     }
     
 })
 
+
 selectOption.onchange = 
     function() {
-        messageBasket.setAttribute('style', "visibility: hidden;");
-        articlesStorage.forEach(art => {
-            if(art.option == selectOption.selectedIndex) {
-                messageBasket.setAttribute('style', "visibility: visible");
-                messageBasket.textContent = 'Vous avez ' + art.quantity + ' article(s) de ce modèle dans votre panier.'
-            } 
-        })
-                
+        showMessage();                
+    }
+
+basket.onchange = 
+    function() {
+        console.log('le basket a changé');
     }
 
 
@@ -102,18 +123,3 @@ selectOption.onchange =
 //         }
 // }
 
-function AddValuePage(camera) {
-
-    productImage.setAttribute('src',camera.imageUrl);
-    productImage.setAttribute('alt',"Image de la caméra " + camera.name);
-    productTitle.textContent = camera.name;
-    productText.textContent = camera.description;
-    productPrice.textContent = "Prix: " + (camera.price/100).toFixed(2) + " €";
-
-    for (i=0; i<camera.lenses.length; i++) {
-        let option = document.createElement("option");
-        option.setAttribute('value', i+1);
-        option.textContent = camera.lenses[i];
-        selectOption.appendChild(option);
-    }
-}
