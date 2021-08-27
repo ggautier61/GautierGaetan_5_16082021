@@ -1,5 +1,6 @@
 let basketContainer = document.getElementById('basketList');
 let amount = document.getElementById('totalAmount');
+let validButton = document.getElementById('valid-button');
 let totalAmount = 0;
 
 function loadBasket() {
@@ -9,13 +10,12 @@ function loadBasket() {
 function setBasket() {
     localStorage.setItem('basket', JSON.stringify(basket));
     loadBasket();
-    // window.location.reload();
-    console.log('set localStorage', basket);
 }
 
 function createCardBasket(camera, cam) {
 
     let card = document.createElement('div');
+    card.setAttribute('id', cam.id + '_' + cam.option);
     card.setAttribute('class', 'row p-2 mb-3');
     card.setAttribute('style', 'border: 1px solid gray;max-width: 900px;width: 100%;');
     basketContainer.appendChild(card);
@@ -114,16 +114,12 @@ function createCardBasket(camera, cam) {
                                 element.quantity--;
                                 document.getElementById('Qty_' + element.id + '_' + element.option).value = element.quantity;
                                 setBasket();
-                                
-                                fetch('http://localhost:3000/api/cameras/'+ cam.id)
-                                .then(response => response.json())
-                                .then(camera => {
-                                    totalAmount -= camera.price;
-                                    amount.textContent = 'Le montant total de votre panier est de ' + (totalAmount/100).toFixed(2) + ' €';
-                                }).catch(error => console.log(error))
+
+                                //recalcul du montant total
+                                totalAmount -= element.price;
+                                amount.textContent = 'Le montant total de votre panier est de ' + (totalAmount/100).toFixed(2) + ' €';
                             }
                         }
-
                     });                      
                 })                        
                 break;
@@ -135,14 +131,9 @@ function createCardBasket(camera, cam) {
                                 element.quantity++;
                                 document.getElementById('Qty_' + element.id + '_' + element.option).value = element.quantity;
                                 setBasket();
-                                fetch('http://localhost:3000/api/cameras/'+ cam.id)
-                                .then(response => response.json())
-                                .then(camera => {
-                                    totalAmount += camera.price;
-                                    amount.textContent = 'Le montant total de votre panier est de ' + (totalAmount/100).toFixed(2) + ' €';
-                                }).catch(error => console.log(error))
+                                totalAmount += element.price;
+                                amount.textContent = 'Le montant total de votre panier est de ' + (totalAmount/100).toFixed(2) + ' €';
                         }
-
                     });        
                 })
                 break;
@@ -150,30 +141,31 @@ function createCardBasket(camera, cam) {
             case 'fas fa-trash-alt':
                 button.addEventListener('click', function() {
                     //suppression de l'article de basket
-                    const deletedItemIndex = basket.findIndex(element => element.id == button.id.split('_')[1] && element.option == cam.option);
+                    const deletedItem = basket.find(element => element.id == button.id.split('_')[1] && element.option == cam.option);
+                    
+                    basket.splice(basket.findIndex(element => element.id == button.id.split('_')[1] && element.option == cam.option),1);
+                    setBasket();
 
-                    basket.splice(deletedItemIndex,1);
-                    localStorage.setItem('basket', JSON.stringify(basket));
-                    //Rechargement de la page
-                    window.location.reload();
+                    //supression du div correspond
+                    let deleteDiv = document.getElementById(deletedItem.id + '_' + deletedItem.option);
+                    basketContainer.removeChild(deleteDiv);
+
+                    //Recalcul du montant total
+                    totalAmount -= deletedItem.quantity * deletedItem.price;
+                    amount.textContent = 'Le montant total de votre panier est de ' + (totalAmount/100).toFixed(2) + ' €';
 
                 })
                 break;
 
             default:
-                console.log('no case');
                 break;
         }
     })
-
-    
+ 
 }
-
-
 
 //Création des élément html du panier
 function init() {
-
     loadBasket();
     basket.forEach(cam => {
         fetch('http://localhost:3000/api/cameras/'+ cam.id)
@@ -182,17 +174,20 @@ function init() {
     
                 createCardBasket(camera, cam);
                 totalAmount += camera.price * cam.quantity;
-                console.log(totalAmount);
                 amount.textContent = 'Le montant total de votre panier est de ' + (totalAmount/100).toFixed(2) + ' €';
             }).catch(error => console.log(error))
         
     });  
 }
 
-function CalculMontanTotal() {
-    basket.forEach()
-}
-
 init();
+
+validButton.addEventListener('click', function(event) {
+    event.preventDefault();
+
+
+
+    console.log('validation commande');
+})
 
 

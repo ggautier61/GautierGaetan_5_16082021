@@ -8,10 +8,9 @@ let btnAddBasket = document.getElementById('btn-valid');
 let messageBasket = document.getElementById('message-basket');
 let selectOption = document.getElementById('selectOption');
 
+let priceArticle = 0;
 let cam;
-let cam_id;
-let storageCam;
-let basket;
+let basket = [];
 let articlesStorage = [];
 
 //Récuperer id
@@ -21,6 +20,9 @@ let id = params.get("id");
 //récupération de tous les articles de la référence sélectionnée
 function loadBasket() {
     basket = JSON.parse(localStorage.getItem('basket'));
+    if(basket == null) {
+        basket = [];
+    }
     showMessage(); 
  }
  
@@ -31,12 +33,15 @@ function loadBasket() {
 
  function showMessage() {
     messageBasket.setAttribute('style', "visibility: hidden;");
-    basket.forEach(art => {
-        if(art.id == id && art.option == selectOption.selectedIndex) {
-            messageBasket.setAttribute('style', "visibility: visible");
-            messageBasket.textContent = 'Vous avez ' + art.quantity + ' article(s) de ce modèle dans votre panier.'
-        } 
-    })
+    if (basket) {
+        basket.forEach(art => {
+            if(art.id == id && art.option == selectOption.selectedIndex) {
+                messageBasket.setAttribute('style', "visibility: visible");
+                messageBasket.textContent = 'Vous avez ' + art.quantity + ' article(s) de ce modèle dans votre panier.'
+            } 
+        })
+    }
+    
  }
 
  function AddValuePage(camera) {
@@ -46,6 +51,7 @@ function loadBasket() {
     productTitle.textContent = camera.name;
     productText.textContent = camera.description;
     productPrice.textContent = "Prix: " + (camera.price/100).toFixed(2) + " €";
+    priceArticle = camera.price;
 
     for (i=0; i<camera.lenses.length; i++) {
         let option = document.createElement("option");
@@ -67,6 +73,7 @@ fetch('http://localhost:3000/api/cameras/'+ id)
     AddValuePage(camera);  
 }).catch(error => console.log(error))
 
+//Add eventListerner bouton ajouter au panier
 btnAddBasket.addEventListener('click', function(event) {
     event.preventDefault();
     
@@ -74,28 +81,27 @@ btnAddBasket.addEventListener('click', function(event) {
     if (selectOption.selectedIndex == 0) {
         alert('Veuillez sélectionner un type de lentille.');
     } else {
-        let art = basket.find(art => art.id == id && art.option == selectOption.selectedIndex);
+        
+        art = basket.find(art => art.id == id && art.option == selectOption.selectedIndex);
 
-        if (!art) {
-            //si l'article/option n'est pas dans le panier --> Ajout nouvel article
+        if(!art) {
             let newArt = {
                 id: id,
                 option: selectOption.selectedIndex,
-                quantity: quantityInput.value
+                quantity: quantityInput.value,
+                price: priceArticle
             }
-
+            
             basket.push(newArt);
+
         } else {
             //Si l'article est présent dans le panier --> Ajout quantité à la quantité du panier
             art.quantity = Number(art.quantity) + Number(quantityInput.value);
+        
         }
-
+        
         setBasket();
-
-
-
     }
-    
 })
 
 
@@ -103,23 +109,3 @@ selectOption.onchange =
     function() {
         showMessage();                
     }
-
-basket.onchange = 
-    function() {
-        console.log('le basket a changé');
-    }
-
-
-
-// function searchStorage() {
-    
-    
-//         if (!basket) {
-
-//             messageBasket.setAttribute('style', "visibility: hidden");
-//         } else {
-//             messageBasket.setAttribute('style', "visibility: visible");
-//             messageBasket.textContent = 'Vous avez ' + storageCam.quantity + ' article(s) de ce modèle dans votre panier.'
-//         }
-// }
-
