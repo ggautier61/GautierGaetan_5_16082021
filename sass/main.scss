@@ -44,3 +44,18 @@ main {
     display: flex;
     justify-content: center;
 }
+
+.totalamount {
+    font-size: larger;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+#basketList {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}

@@ -1,168 +1,198 @@
 let basketContainer = document.getElementById('basketList');
+let amount = document.getElementById('totalAmount');
+let totalAmount = 0;
 
-// let basket = [
-//     { 
-//         id: "5be1ed3f1c9d44000030b061",
-//         quantity: 2,
-//         option: 1
-//     }
-// ]
+function loadBasket() {
+   basket = JSON.parse(localStorage.getItem('basket')); 
+}
 
-// basket.push({
-//     id: '5be1ef211c9d44000030b062',
-//     quantity: 3,
-//     option: 1
-// })
-
-
-// localStorage.setItem('basket', JSON.stringify(basket));
-
-let basket = JSON.parse(localStorage.getItem('basket'));
+function setBasket() {
+    localStorage.setItem('basket', JSON.stringify(basket));
+    loadBasket();
+    // window.location.reload();
+    console.log('set localStorage', basket);
+}
 
 function createCardBasket(camera, cam) {
 
     let card = document.createElement('div');
-            card.setAttribute('class', 'row p-3 m-3');
-            card.setAttribute('style', 'border: 1px solid gray;');
-            basketContainer.appendChild(card);
+    card.setAttribute('class', 'row p-2 mb-3');
+    card.setAttribute('style', 'border: 1px solid gray;max-width: 900px;width: 100%;');
+    basketContainer.appendChild(card);
 
-            let colImage = document.createElement('div');
-            colImage.setAttribute('class', 'col-4');
-            colImage.setAttribute('style', 'display: flex;justify-content: center;')
-            card.appendChild(colImage);
-        
-            let image = document.createElement('img');
-            image.setAttribute('class', 'img-fluid rounded');
-            image.setAttribute('src', camera.imageUrl);
-            image.setAttribute('alt', 'Image de la caméra');
-            image.setAttribute('style', 'height: 85px;');
-            colImage.appendChild(image);
+    let colImage = document.createElement('div');
+    colImage.setAttribute('class', 'col-5');
+    colImage.setAttribute('style', 'justify-content: center;display: flex;align-items: center;');
+    card.appendChild(colImage);
 
-            let colDetails = document.createElement('div');
-            colDetails.setAttribute('class', 'col-8');
-            card.appendChild(colDetails);
+    let image = document.createElement('img');
+    image.setAttribute('class', 'img-fluid rounded');
+    image.setAttribute('src', camera.imageUrl);
+    image.setAttribute('alt', 'Image de la :caméra');
+    image.setAttribute('style', 'min-height: 100px;max-width: inherit;object-fit: cover;min-width: 100px;max-height: 130px;');
+    colImage.appendChild(image);
 
-            let titre = document.createElement('h5');
-            titre.textContent = camera.name;
-            colDetails.appendChild(titre);
+    let colDetails = document.createElement('div');
+    colDetails.setAttribute('class', 'col-7');
+    card.appendChild(colDetails);
 
-            let option = document.createElement('p');
-            //Rercherche nom de l'option
-            option.textContent = camera.lenses[cam.option - 1];
-            colDetails.appendChild(option);
+    let titre = document.createElement('h5');
+    titre.textContent = camera.name;
+    colDetails.appendChild(titre);
 
-            let price = document.createElement('p');
-            price.textContent = "Prix: " + (camera.price/100).toFixed(2) + " €";
-            colDetails.appendChild(price);
+    let option = document.createElement('p');
+    //Rercherche nom de l'option
+    option.textContent = camera.lenses[cam.option - 1];
+    colDetails.appendChild(option);
 
-            //Création de la ligne des boutons et quantité
+    let price = document.createElement('p');
+    price.textContent = "Prix: " + (camera.price/100).toFixed(2) + " €";
+    colDetails.appendChild(price);
 
-            let rowButton = document.createElement('div');
-            rowButton.setAttribute('class', 'row row-button');
-            colDetails.appendChild(rowButton);
+    //Création de la ligne des boutons et quantité
+    let rowButton = document.createElement('div');
+    rowButton.setAttribute('class', 'row row-button');
+    colDetails.appendChild(rowButton);
 
-            let btnMinus = document.createElement('div');
-            btnMinus.setAttribute('class', 'col-2 btn-adjust ms-2 me-2');
-            btnMinus.setAttribute('type', 'button');
-            rowButton.appendChild(btnMinus);
+    let btnMinus = document.createElement('div');
+    btnMinus.setAttribute('class', 'btn-adjust');
+    btnMinus.setAttribute('type', 'button');
+    btnMinus.setAttribute('style', 'max-width: 26px;margin-right: 10px;');
+    btnMinus.setAttribute('id', 'minBtn_' + cam.id + '_' + cam.option);
+    rowButton.appendChild(btnMinus);
 
-            let iconMinus = document.createElement('i');
-            iconMinus.setAttribute('class', 'fas fa-minus');
-            btnMinus.appendChild(iconMinus);
+    let iconMinus = document.createElement('i');
+    iconMinus.setAttribute('class', 'fas fa-minus');
+    btnMinus.appendChild(iconMinus);
 
-            let colQuantite = document.createElement('div');
-            colQuantite.setAttribute('class', 'col-8');
-            rowButton.appendChild(colQuantite);
+    let colQuantite = document.createElement('div');
+    colQuantite.setAttribute('style', 'display: flex;padding: 0px;margin-right: 10px;justify-content: center;max-width: 60px;');
+    rowButton.appendChild(colQuantite);
 
-            let quantity = document.createElement('input');
-            quantity.setAttribute('style', 'text');
-            quantity.setAttribute('style', 'width: 100%;height: 100%; text-align: center;');
-            quantity.value = cam.quantity;
-            colQuantite.appendChild(quantity);
+    let quantity = document.createElement('input');
+    quantity.setAttribute('style', 'text');
+    quantity.setAttribute('style', 'text-align: center;width: 100%;');
+    quantity.setAttribute('id', 'Qty_' + cam.id + '_' + cam.option);
+    quantity.value = cam.quantity;
+    colQuantite.appendChild(quantity);
 
 
-            let btnPlus = document.createElement('div');
-            btnPlus.setAttribute('class', 'col-2 btn-adjust ms-2 me-2');
-            btnPlus.setAttribute('type', 'button');
-            rowButton.appendChild(btnPlus);
+    let btnPlus = document.createElement('div');
+    btnPlus.setAttribute('class', 'btn-adjust');
+    btnPlus.setAttribute('style', 'max-width: 26px;margin-right: 10px;');
+    btnPlus.setAttribute('type', 'button');
+    btnPlus.setAttribute('id', 'plusBtn_' + cam.id + '_' + cam.option);
+    rowButton.appendChild(btnPlus);
 
-            let iconPlus = document.createElement('i');
-            iconPlus.setAttribute('class', 'fas fa-plus');
-            btnPlus.appendChild(iconPlus);
+    let iconPlus = document.createElement('i');
+    iconPlus.setAttribute('class', 'fas fa-plus');
+    btnPlus.appendChild(iconPlus);
 
-            let btnDelete = document.createElement('div');
-            btnDelete.setAttribute('class', 'btn btn-alert col-2 btn-adjust ms-2 me-2');
-            btnDelete.setAttribute('type', 'button');
-            btnDelete.setAttribute('id', cam.id);
-            rowButton.appendChild(btnDelete);
+    let btnDelete = document.createElement('div');
+    btnDelete.setAttribute('class', 'btn-adjust');
+    btnDelete.setAttribute('style', 'max-width: 26px;margin-right: 10px;');
+    btnDelete.setAttribute('type', 'button');
+    btnDelete.setAttribute('id', 'delBtn_' + cam.id + '_' + cam.option);
+    rowButton.appendChild(btnDelete);
 
-            let iconDelete = document.createElement('i');
-            iconDelete.setAttribute('class', 'fas fa-trash-alt');
-            btnDelete.appendChild(iconDelete);
+    let iconDelete = document.createElement('i');
+    iconDelete.setAttribute('class', 'fas fa-trash-alt');
+    btnDelete.appendChild(iconDelete);
 
-            //Ajout de l'event click sur les boutons
-            let buttons = rowButton.querySelectorAll(".btn-adjust");
+    //Ajout de l'event click sur les boutons
+    let buttons = rowButton.querySelectorAll(".btn-adjust");
 
-            buttons.forEach(button => {
+    buttons.forEach(button => {
 
-                switch (button.firstChild.className) {
+        switch (button.firstChild.className) {
 
-                    case 'fas fa-minus':
-                        button.addEventListener('click', function(event) {
-                            
-                            console.log(event);
-                            console.log('minus');
-                        })                        
-                        break;
-                    
-                    case 'fas fa-plus':
-                        button.addEventListener('click', function() {
-                            console.log('plus');
-                        })
-                        break;
+            case 'fas fa-minus':
+                button.addEventListener('click', function() {
+                    basket.find(element => {
+                        if(element.id == button.id.split('_')[1] && element.option == cam.option) {
+                            if(element.quantity > 1) {
+                                element.quantity--;
+                                document.getElementById('Qty_' + element.id + '_' + element.option).value = element.quantity;
+                                setBasket();
+                                
+                                fetch('http://localhost:3000/api/cameras/'+ cam.id)
+                                .then(response => response.json())
+                                .then(camera => {
+                                    totalAmount -= camera.price;
+                                    amount.textContent = 'Le montant total de votre panier est de ' + (totalAmount/100).toFixed(2) + ' €';
+                                }).catch(error => console.log(error))
+                            }
+                        }
 
-                    case 'fas fa-trash-alt':
-                        button.addEventListener('click', function() {
-
-                            //suppression de l'article de basket
-                            const deletedItemIndex = basket.findIndex(element => element.id == button.id);
-                            basket.splice(deletedItemIndex,1);
-
-                            localStorage.setItem('basket', JSON.stringify(basket));
-                            window.location.reload();
-
-                        })
-                        break;
-
-                    default:
-                        console.log('no case');
-                        break;
-                }
-                
-            })
+                    });                      
+                })                        
+                break;
             
-            // console.log(buttons);
+            case 'fas fa-plus':
+                button.addEventListener('click', function() {
+                    basket.find(element => {
+                        if(element.id == button.id.split('_')[1] && element.option == cam.option) {
+                                element.quantity++;
+                                document.getElementById('Qty_' + element.id + '_' + element.option).value = element.quantity;
+                                setBasket();
+                                fetch('http://localhost:3000/api/cameras/'+ cam.id)
+                                .then(response => response.json())
+                                .then(camera => {
+                                    totalAmount += camera.price;
+                                    amount.textContent = 'Le montant total de votre panier est de ' + (totalAmount/100).toFixed(2) + ' €';
+                                }).catch(error => console.log(error))
+                        }
+
+                    });        
+                })
+                break;
+
+            case 'fas fa-trash-alt':
+                button.addEventListener('click', function() {
+                    //suppression de l'article de basket
+                    const deletedItemIndex = basket.findIndex(element => element.id == button.id.split('_')[1] && element.option == cam.option);
+
+                    basket.splice(deletedItemIndex,1);
+                    localStorage.setItem('basket', JSON.stringify(basket));
+                    //Rechargement de la page
+                    window.location.reload();
+
+                })
+                break;
+
+            default:
+                console.log('no case');
+                break;
+        }
+    })
+
+    
 }
 
 
+
 //Création des élément html du panier
-basket.forEach(cam => {
-    console.log(cam);
+function init() {
 
-    fetch('http://localhost:3000/api/cameras/'+ cam.id)
-        .then(response => response.json())
-        .then(camera => {
+    loadBasket();
+    basket.forEach(cam => {
+        fetch('http://localhost:3000/api/cameras/'+ cam.id)
+            .then(response => response.json())
+            .then(camera => {
     
-            createCardBasket(camera, cam);
+                createCardBasket(camera, cam);
+                totalAmount += camera.price * cam.quantity;
+                console.log(totalAmount);
+                amount.textContent = 'Le montant total de votre panier est de ' + (totalAmount/100).toFixed(2) + ' €';
+            }).catch(error => console.log(error))
+        
+    });  
+}
 
-    
-        }).catch(error => console.log(error))
+function CalculMontanTotal() {
+    basket.forEach()
+}
 
-    
-
-})
-
+init();
 
 
-
-console.log(basket);

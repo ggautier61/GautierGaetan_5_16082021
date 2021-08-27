@@ -43,8 +43,7 @@ header .header__logo img {
 .row-button {
   height: 25px;
   flex-wrap: nowrap;
-  width: 150px;
-  position: relative;
+  width: 100%;
   padding-left: 13px;
 }
 
@@ -81,6 +80,21 @@ main {
 #product-image-col {
   display: flex;
   justify-content: center;
+}
+
+.totalamount {
+  font-size: larger;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+
+#basketList {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 /*# sourceMappingURL=style.css.map */
