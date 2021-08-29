@@ -42,9 +42,11 @@
                 <div class="container-fluid p-0" id="basketList"></div>
             </section>
 
-            <div class="container totalamount"><p id="totalAmount"></p></div>
+            <div class="container mt-2 mb-2 totalamount"><p id="totalAmount"></p></div>
 
-            <section style="display: flex; justify-content: center;">
+            <p>Pour passer commande, veuillez renseigner le formulaire suivant:</p>
+
+            <section style="display: flex; justify-content: center;" id="section-form">
 
                 <div class="row w-100" style="display: flex;flex-direction: column; max-width: 500px;border: 1px solid black;">
                     <div class="col-12 mt-3 mb-3">
@@ -78,13 +80,13 @@
                                         Veuillez entrer une adresse correcte
                                     </div>
                                 </div>
-                                <div class="mb-3">
+                                <!-- <div class="mb-3">
                                     <label for="postalcode" class="form-label">Code Postal</label>
                                     <input type="text" class="form-control" id="postalcode" placeholder="Veuillez entrez votre code postal" required>
                                     <div class="invalid-feedback">
                                         Veuillez entrer un code postal correct
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="mb-3">
                                     <label for="city" class="form-label">Ville</label>
                                     <input type="text" class="form-control" id="city" placeholder="Veuillez entrer votre ville" required>

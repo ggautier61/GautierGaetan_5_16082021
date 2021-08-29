@@ -49,12 +49,12 @@ fetch('http://localhost:3000/api/cameras')
         divCardBoby.appendChild(prix);
 
         //Ajout bouton Détails
-        let btnDetails = document.createElement("a")
+        let btnDetails = document.createElement("a");
         btnDetails.classList.add("btn");
         btnDetails.setAttribute('style', "justify-content: center;display: flex;border: 1px solid gray;")
         btnDetails.href = "views/products.html?id="+arts[i]._id;
-        btnDetails.innerHTML = " Détails de la caméra";
-        divCardBoby.appendChild(btnDetails);
+        btnDetails.innerHTML = "Détails de la caméra";
+        divCardBoby.appendChild (btnDetails);
     }
 }).catch(error => console.log(error))
 

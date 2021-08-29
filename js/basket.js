@@ -1,5 +1,6 @@
 let basketContainer = document.getElementById('basketList');
-let amount = document.getElementById('totalAmount');
+let sectionForm = document.getElementById('section-form');
+let amountDiv = document.getElementById('totalAmount');
 let validButton = document.getElementById('valid-button');
 let totalAmount = 0;
 
@@ -117,7 +118,7 @@ function createCardBasket(camera, cam) {
 
                                 //recalcul du montant total
                                 totalAmount -= element.price;
-                                amount.textContent = 'Le montant total de votre panier est de ' + (totalAmount/100).toFixed(2) + ' €';
+                                amountDiv.textContent = 'Montant total du panier : ' + (totalAmount/100).toFixed(2) + ' €';
                             }
                         }
                     });                      
@@ -132,7 +133,7 @@ function createCardBasket(camera, cam) {
                                 document.getElementById('Qty_' + element.id + '_' + element.option).value = element.quantity;
                                 setBasket();
                                 totalAmount += element.price;
-                                amount.textContent = 'Le montant total de votre panier est de ' + (totalAmount/100).toFixed(2) + ' €';
+                                amountDiv.textContent = 'Montant total du panier : ' + (totalAmount/100).toFixed(2) + ' €';
                         }
                     });        
                 })
@@ -152,8 +153,11 @@ function createCardBasket(camera, cam) {
 
                     //Recalcul du montant total
                     totalAmount -= deletedItem.quantity * deletedItem.price;
-                    amount.textContent = 'Le montant total de votre panier est de ' + (totalAmount/100).toFixed(2) + ' €';
-
+                    if(totalAmount == 0) {
+                        addMessageNoBasket();
+                    } else {
+                        amountDiv.textContent = 'Montant total du panier : ' + (totalAmount/100).toFixed(2) + ' €';
+                    }
                 })
                 break;
 
@@ -164,30 +168,88 @@ function createCardBasket(camera, cam) {
  
 }
 
-//Création des élément html du panier
-function init() {
-    loadBasket();
-    basket.forEach(cam => {
-        fetch('http://localhost:3000/api/cameras/'+ cam.id)
-            .then(response => response.json())
-            .then(camera => {
-    
-                createCardBasket(camera, cam);
-                totalAmount += camera.price * cam.quantity;
-                amount.textContent = 'Le montant total de votre panier est de ' + (totalAmount/100).toFixed(2) + ' €';
-            }).catch(error => console.log(error))
-        
-    });  
+function addMessageNoBasket() {
+    sectionForm.setAttribute('style', 'display: none;');
+    amountDiv.textContent = '';
+    basketContainer.textContent = "Il n'y a aucun article dans votre panier."
+
+    //Ajout bouton Détails
+    let btnAccueil = document.createElement("a")
+    btnAccueil.classList.add("btn");
+    btnAccueil.setAttribute('style', "justify-content: center;display: flex;border: 1px solid gray;")
+    btnAccueil.href = "../index.html";
+    btnAccueil.innerHTML = "Choisir des articles";
+    basketContainer.appendChild(btnAccueil);
 }
 
+//Création des élément html du panier
+function init() {
+    
+    if(basket.length != 0) {
+        basket.forEach(cam => {
+            fetch('http://localhost:3000/api/cameras/'+ cam.id)
+                .then(response => response.json())
+                .then(camera => {
+        
+                    createCardBasket(camera, cam);
+                    totalAmount += camera.price * cam.quantity;
+                    amountDiv.textContent = 'Montant total du panier : ' + (totalAmount/100).toFixed(2) + ' €';
+                }).catch(error => console.log(error))
+            
+        });  
+    } else {
+        
+        addMessageNoBasket();
+    }
+    
+}
+
+loadBasket();
 init();
 
 validButton.addEventListener('click', function(event) {
     event.preventDefault();
+    let products = [];
+
+    for (let art of basket) {
+        products.push(art.id);
+    }
+    
+    const post = async function (){
+        try {
+            let response = await fetch('http://localhost:3000/api/cameras/order', {
+                method: 'POST',
+                body : JSON.stringify(
+                    {
+                        contact: {
+                        firstName: document.getElementById('firstname').value,
+                        lastName: document.getElementById('lastname').value,
+                        address: document.getElementById('address').value,
+                        city: document.getElementById('city').value,
+                        email: document.getElementById('email').value
+                    },
+                    products: products
+                    }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if(response.ok) {
+                let  data = await response.json();
+                window.location = "order-confirm.html?total="+totalAmount+"&order="+JSON.stringify(data);
+            } else {
+                event.preventDefault();
+                alert('Erreur s\'est produite : ' + response.status);
+            } 
+        } catch (error) {
+            alert("Erreur : " + error);
+        } 
+    };
+    post();
 
 
 
-    console.log('validation commande');
-})
+    })
+
 
 

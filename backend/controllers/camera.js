@@ -86,6 +86,7 @@ exports.orderCameras = (req, res, next) => {
     }
   ).catch(
     (error) => {
+      console.log(quries);
       return res.status(500).json(new Error(error));
     }
   );
