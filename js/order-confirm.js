@@ -3,10 +3,6 @@ let total = params.get("total");
 let order = JSON.parse(params.get("order"));
 let messageContainer = document.getElementById('message');
 
-
-console.log('total', total);
-console.log('order', order);
-
 let paraph = document.createElement('p');
 paraph.innerHTML = "<strong>" + order.contact.firstName + "</strong> toute l'équipe d'OriCamera vous remercie pour votre achat sur notre site de vente en ligne."
 let paraph2 = document.createElement('p');

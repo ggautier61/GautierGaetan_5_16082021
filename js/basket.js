@@ -6,6 +6,9 @@ let totalAmount = 0;
 
 function loadBasket() {
    basket = JSON.parse(localStorage.getItem('basket')); 
+   if (!basket) {
+       basket = [];
+   }
 }
 
 function setBasket() {
@@ -170,16 +173,20 @@ function createCardBasket(camera, cam) {
 
 function addMessageNoBasket() {
     sectionForm.setAttribute('style', 'display: none;');
-    amountDiv.textContent = '';
-    basketContainer.textContent = "Il n'y a aucun article dans votre panier."
+    amountDiv.setAttribute('style', 'display: none;');
+    basketContainer.textContent = "Désolé, il n'y a aucun article actuellement dans votre panier."
+    basketContainer.setAttribute('style', 'font-size: 1.2rem;')
 
     //Ajout bouton Détails
     let btnAccueil = document.createElement("a")
-    btnAccueil.classList.add("btn");
-    btnAccueil.setAttribute('style', "justify-content: center;display: flex;border: 1px solid gray;")
+    btnAccueil.classList.add('btn');
+    btnAccueil.classList.add('mt-5');
+    btnAccueil.setAttribute('style', "justify-content: center;display: flex;border: 1px solid gray;");
     btnAccueil.href = "../index.html";
     btnAccueil.innerHTML = "Choisir des articles";
     basketContainer.appendChild(btnAccueil);
+
+    document.querySelector('footer').setAttribute('class', 'footer footer_bottom');
 }
 
 //Création des élément html du panier
@@ -204,52 +211,86 @@ function init() {
     
 }
 
+function checkValidityInput() {
+
+
+    if (!document.querySelector('#lastname').value.match(/^([a-zA-Zàâäéèêëïîôöùûüç' -]+)$/)){
+            alert('Le champs nom ne doit pas contenir de caractères spéciaux ou numériques');
+            return false;
+    } 
+    if (!document.querySelector('#firstname').value.match(/^([a-zA-Zàâäéèêëïîôöùûüç' -]+)$/)){
+        alert('Le champs prénom ne doit pas contenir de caractères spéciaux ou numériques');
+        return false;
+    }
+    if (!document.querySelector('#email').value.match(/^[\w]+\@[\w]+\.[a-z]{2,3}$/)){
+        alert('L\'adresse email renseignée n\'est pas valide. Elle doit être sous la forme exemple@exemple.fr et ne pas contenir de caractères spéciaux');
+        return false;
+    }
+    if (!document.querySelector('#address').value.match(/^([\wàâäéèêëïîôöùûüç' ]+)$/)){
+        alert('Le champs Adresse ne doit pas contenir de caractères spéciaux ou numériques');
+        return false;
+    }
+    if (!document.querySelector('#city').value.match(/^([a-zA-Zàâäéèêëïîôöùûüç' -]+)$/)){
+        alert('Le champs ville ne doit pas contenir de caractères spéciaux ou numériques');
+        return false;
+    }
+
+    return true;
+
+}
+
 loadBasket();
 init();
 
 validButton.addEventListener('click', function(event) {
     event.preventDefault();
-    let products = [];
 
-    for (let art of basket) {
-        products.push(art.id);
-    }
-    
-    const post = async function (){
-        try {
-            let response = await fetch('http://localhost:3000/api/cameras/order', {
-                method: 'POST',
-                body : JSON.stringify(
-                    {
-                        contact: {
-                        firstName: document.getElementById('firstname').value,
-                        lastName: document.getElementById('lastname').value,
-                        address: document.getElementById('address').value,
-                        city: document.getElementById('city').value,
-                        email: document.getElementById('email').value
-                    },
-                    products: products
-                    }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            if(response.ok) {
-                let  data = await response.json();
-                window.location = "order-confirm.html?total="+totalAmount+"&order="+JSON.stringify(data);
-            } else {
-                event.preventDefault();
-                alert('Erreur s\'est produite : ' + response.status);
+    let inputOk = checkValidityInput();
+
+    if(inputOk) {
+        let products = [];
+
+        for (let art of basket) {
+            products.push(art.id);
+        }
+        
+        const post = async function (){
+            try {
+                let response = await fetch('http://localhost:3000/api/cameras/order', {
+                    method: 'POST',
+                    body : JSON.stringify(
+                        {
+                            contact: {
+                            firstName: document.getElementById('firstname').value,
+                            lastName: document.getElementById('lastname').value,
+                            address: document.getElementById('address').value,
+                            city: document.getElementById('city').value,
+                            email: document.getElementById('email').value
+                        },
+                        products: products
+                        }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if(response.ok) {
+                    let  data = await response.json();
+                    localStorage.clear();
+                    window.location = "order-confirm.html?total="+totalAmount+"&order="+JSON.stringify(data);
+                } else {
+                    event.preventDefault();
+                    alert('Erreur s\'est produite : ' + response.status);
+                } 
+            } catch (error) {
+                alert("Erreur : " + error);
             } 
-        } catch (error) {
-            alert("Erreur : " + error);
-        } 
+        }
+
+        post();
+    
     };
-    post();
 
-
-
-    })
+})
 
 
 
