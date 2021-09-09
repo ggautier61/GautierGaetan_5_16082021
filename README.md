@@ -9,7 +9,7 @@ Il faut avoir Node et `npm` d'installer localement sur l'ordinateur.
 ### Installation ###
 
 Cloner ce dépot. A partir du dossier du projet, exécuter `npm install`.
-Il faut ensuite démarrer le serveur. Pour se faire, aller dans le dossier backend et exécuter la commande 'node server'
+Il faut ensuite démarrer le serveur. Pour se faire, aller dans le dossier backend et exécuter la commande `node server`
 
 Le serveur doit démarrer sur localhoast et utilise le port `3000`.
 Si le port `3000` est déjà utlisé, il faut écouter le port `3001`.
